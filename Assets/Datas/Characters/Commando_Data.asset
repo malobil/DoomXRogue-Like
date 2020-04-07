@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Commando_Data
   m_EditorClassIdentifier: 
   CharacterName: Commando
-  HP: 0
-  HPRegain: 0
+  HP: 200
+  HPRegain: 1
   Shield: 0
   Damage: 0
   SpellDamage: 0
   CDR: 0
   AtkSpeed: 0
   ReloadSpeed: 0
-  MoveSpeed: 0
+  MoveSpeed: 5
   JumpNumber: 0
