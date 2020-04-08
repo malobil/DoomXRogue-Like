@@ -12,6 +12,10 @@ public abstract class Characters : MonoBehaviour,IDamageable,IHealable
     [SerializeField] private float CameraSensitivity = 0.5f ;
     private float xCameraRotation;
 
+    [Header("Jump")]
+    [SerializeField] private GroundDetector CharacterFeet;
+    private int CurrentJumpNum;
+
     //Controls
     private CharacterControls ActionControls;
     private Vector2 MovementInputs;
@@ -66,13 +70,20 @@ public abstract class Characters : MonoBehaviour,IDamageable,IHealable
         xCameraRotation = Mathf.Clamp(xCameraRotation, -90f, 90f);
 
         CharacterCamera.localRotation = Quaternion.Euler(xCameraRotation, CharacterCamera.localRotation.y, CharacterCamera.localRotation.z);
-
-        Debug.Log(mouseX + "." + mouseY);
     }
 
     public virtual void Jump()
     {
-        RbComponent.AddForce(Vector3.up * CharacterStats.JumpForce, ForceMode.Impulse);
+        if(CurrentJumpNum > 0)
+        {
+            RbComponent.AddForce(Vector3.up * CharacterStats.JumpForce, ForceMode.Impulse);
+            CurrentJumpNum--;
+        }
+    }
+
+    public virtual void ResetJump()
+    {
+        CurrentJumpNum = CharacterStats.JumpNumber;
     }
 
     // Start is called before the first frame update

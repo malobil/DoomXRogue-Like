@@ -22,4 +22,5 @@ MonoBehaviour:
   AtkSpeed: 0
   ReloadSpeed: 0
   MoveSpeed: 5
-  JumpNumber: 0
+  JumpNumber: 1
+  JumpForce: 5
