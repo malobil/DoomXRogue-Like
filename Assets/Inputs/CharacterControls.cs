@@ -15,7 +15,7 @@ public class @CharacterControls : IInputActionCollection, IDisposable
     ""name"": ""CharacterControls"",
     ""maps"": [
         {
-            ""name"": ""Move"",
+            ""name"": ""CharacterMoves"",
             ""id"": ""b649538c-de9a-4f38-b640-7b8d99e37669"",
             ""actions"": [
                 {
@@ -23,6 +23,22 @@ public class @CharacterControls : IInputActionCollection, IDisposable
                     ""type"": ""PassThrough"",
                     ""id"": ""3197ad5c-24be-4617-8b3b-d2cf934cc7fd"",
                     ""expectedControlType"": ""Dpad"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""MousePosition"",
+                    ""type"": ""Value"",
+                    ""id"": ""b7a2804f-2b3b-4ad5-8a81-d63971eb0ac8"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""90886d70-0b44-469d-bd65-39b06487b9f4"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """"
                 }
@@ -82,15 +98,39 @@ public class @CharacterControls : IInputActionCollection, IDisposable
                     ""action"": ""Movements"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cf432ea9-ac58-45ea-b8ee-29fb12e50e2d"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MousePosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e266af8e-bc01-4121-b1d7-f53246ddf207"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
     ],
     ""controlSchemes"": []
 }");
-        // Move
-        m_Move = asset.FindActionMap("Move", throwIfNotFound: true);
-        m_Move_Movements = m_Move.FindAction("Movements", throwIfNotFound: true);
+        // CharacterMoves
+        m_CharacterMoves = asset.FindActionMap("CharacterMoves", throwIfNotFound: true);
+        m_CharacterMoves_Movements = m_CharacterMoves.FindAction("Movements", throwIfNotFound: true);
+        m_CharacterMoves_MousePosition = m_CharacterMoves.FindAction("MousePosition", throwIfNotFound: true);
+        m_CharacterMoves_Jump = m_CharacterMoves.FindAction("Jump", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -137,40 +177,58 @@ public class @CharacterControls : IInputActionCollection, IDisposable
         asset.Disable();
     }
 
-    // Move
-    private readonly InputActionMap m_Move;
-    private IMoveActions m_MoveActionsCallbackInterface;
-    private readonly InputAction m_Move_Movements;
-    public struct MoveActions
+    // CharacterMoves
+    private readonly InputActionMap m_CharacterMoves;
+    private ICharacterMovesActions m_CharacterMovesActionsCallbackInterface;
+    private readonly InputAction m_CharacterMoves_Movements;
+    private readonly InputAction m_CharacterMoves_MousePosition;
+    private readonly InputAction m_CharacterMoves_Jump;
+    public struct CharacterMovesActions
     {
         private @CharacterControls m_Wrapper;
-        public MoveActions(@CharacterControls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Movements => m_Wrapper.m_Move_Movements;
-        public InputActionMap Get() { return m_Wrapper.m_Move; }
+        public CharacterMovesActions(@CharacterControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Movements => m_Wrapper.m_CharacterMoves_Movements;
+        public InputAction @MousePosition => m_Wrapper.m_CharacterMoves_MousePosition;
+        public InputAction @Jump => m_Wrapper.m_CharacterMoves_Jump;
+        public InputActionMap Get() { return m_Wrapper.m_CharacterMoves; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
         public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(MoveActions set) { return set.Get(); }
-        public void SetCallbacks(IMoveActions instance)
+        public static implicit operator InputActionMap(CharacterMovesActions set) { return set.Get(); }
+        public void SetCallbacks(ICharacterMovesActions instance)
         {
-            if (m_Wrapper.m_MoveActionsCallbackInterface != null)
+            if (m_Wrapper.m_CharacterMovesActionsCallbackInterface != null)
             {
-                @Movements.started -= m_Wrapper.m_MoveActionsCallbackInterface.OnMovements;
-                @Movements.performed -= m_Wrapper.m_MoveActionsCallbackInterface.OnMovements;
-                @Movements.canceled -= m_Wrapper.m_MoveActionsCallbackInterface.OnMovements;
+                @Movements.started -= m_Wrapper.m_CharacterMovesActionsCallbackInterface.OnMovements;
+                @Movements.performed -= m_Wrapper.m_CharacterMovesActionsCallbackInterface.OnMovements;
+                @Movements.canceled -= m_Wrapper.m_CharacterMovesActionsCallbackInterface.OnMovements;
+                @MousePosition.started -= m_Wrapper.m_CharacterMovesActionsCallbackInterface.OnMousePosition;
+                @MousePosition.performed -= m_Wrapper.m_CharacterMovesActionsCallbackInterface.OnMousePosition;
+                @MousePosition.canceled -= m_Wrapper.m_CharacterMovesActionsCallbackInterface.OnMousePosition;
+                @Jump.started -= m_Wrapper.m_CharacterMovesActionsCallbackInterface.OnJump;
+                @Jump.performed -= m_Wrapper.m_CharacterMovesActionsCallbackInterface.OnJump;
+                @Jump.canceled -= m_Wrapper.m_CharacterMovesActionsCallbackInterface.OnJump;
             }
-            m_Wrapper.m_MoveActionsCallbackInterface = instance;
+            m_Wrapper.m_CharacterMovesActionsCallbackInterface = instance;
             if (instance != null)
             {
                 @Movements.started += instance.OnMovements;
                 @Movements.performed += instance.OnMovements;
                 @Movements.canceled += instance.OnMovements;
+                @MousePosition.started += instance.OnMousePosition;
+                @MousePosition.performed += instance.OnMousePosition;
+                @MousePosition.canceled += instance.OnMousePosition;
+                @Jump.started += instance.OnJump;
+                @Jump.performed += instance.OnJump;
+                @Jump.canceled += instance.OnJump;
             }
         }
     }
-    public MoveActions @Move => new MoveActions(this);
-    public interface IMoveActions
+    public CharacterMovesActions @CharacterMoves => new CharacterMovesActions(this);
+    public interface ICharacterMovesActions
     {
         void OnMovements(InputAction.CallbackContext context);
+        void OnMousePosition(InputAction.CallbackContext context);
+        void OnJump(InputAction.CallbackContext context);
     }
 }

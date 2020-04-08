@@ -16,4 +16,5 @@ public class CharacterData : ScriptableObject
     public float ReloadSpeed;
     public float MoveSpeed;
     public int JumpNumber;
+    public float JumpForce;
 }
