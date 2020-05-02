@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 31541769733d8474b89132742d96083b
+guid: 0b260a7980dfd8a48a7b68be69c5d335
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -10,12 +10,12 @@ ScriptedImporter:
   script: {fileID: 232528478, guid: 43a8bbf65be290d44ba52b94476242b9, type: 3}
   version: 19
   mGraphInstanceData:
-  - graphLabel: TilesGround1
-    prototypeName: TilesGround1
+  - graphLabel: TrainingRoomGround
+    prototypeName: TrainingRoomGround
     graphDescIndex: 0
     generateAllOutputs: 0
     generateMipMaps: 1
-    preset: " <sbspreset pkgurl=\"pkg://TilesGround1\" label=\"\" >\n </sbspreset>\n"
+    preset: " <sbspreset pkgurl=\"pkg://TrainingRoomGround\" label=\"\" >\n </sbspreset>\n"
     shaderName: Standard
     outputNames: baseColor,normal,metallic
     materialProperties:
@@ -24,7 +24,7 @@ ScriptedImporter:
       lightmapFlags: 4
       texEnvs:
       - name: _BumpMap
-        texture: {fileID: 7743276649273583574, guid: 31541769733d8474b89132742d96083b,
+        texture: {fileID: -5793985287924285410, guid: 0b260a7980dfd8a48a7b68be69c5d335,
           type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
@@ -45,12 +45,12 @@ ScriptedImporter:
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
       - name: _MainTex
-        texture: {fileID: -864280446464980791, guid: 31541769733d8474b89132742d96083b,
+        texture: {fileID: -6767917015658143675, guid: 0b260a7980dfd8a48a7b68be69c5d335,
           type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
       - name: _MetallicGlossMap
-        texture: {fileID: 4413610229158232628, guid: 31541769733d8474b89132742d96083b,
+        texture: {fileID: -267897005608571963, guid: 0b260a7980dfd8a48a7b68be69c5d335,
           type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
@@ -110,19 +110,19 @@ ScriptedImporter:
     - outputName: metallic
       alphaSource: smoothness
     textureParameters:
-    - textureName: TilesGround1 - roughness
+    - textureName: TrainingRoomGround - roughness
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: TilesGround1 - baseColor
+    - textureName: TrainingRoomGround - baseColor
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: TilesGround1 - normal
+    - textureName: TrainingRoomGround - normal
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: TilesGround1 - metallic
+    - textureName: TrainingRoomGround - metallic
       wrapMode: 0
       filterMode: 1
       aniso: 1
@@ -143,9 +143,9 @@ ScriptedImporter:
       textureHeight: 2048
       textureFormat: 0
       bGenerateOnLoad: 1
-    material: {fileID: -4801270734402707343, guid: 31541769733d8474b89132742d96083b,
+    material: {fileID: -763983463113675378, guid: 0b260a7980dfd8a48a7b68be69c5d335,
       type: 3}
     generatedTextures:
-    - {fileID: -864280446464980791, guid: 31541769733d8474b89132742d96083b, type: 3}
-    - {fileID: 7743276649273583574, guid: 31541769733d8474b89132742d96083b, type: 3}
-    - {fileID: 4413610229158232628, guid: 31541769733d8474b89132742d96083b, type: 3}
+    - {fileID: -6767917015658143675, guid: 0b260a7980dfd8a48a7b68be69c5d335, type: 3}
+    - {fileID: -5793985287924285410, guid: 0b260a7980dfd8a48a7b68be69c5d335, type: 3}
+    - {fileID: -267897005608571963, guid: 0b260a7980dfd8a48a7b68be69c5d335, type: 3}
