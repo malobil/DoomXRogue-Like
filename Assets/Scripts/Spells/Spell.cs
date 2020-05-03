@@ -19,9 +19,10 @@ public abstract class Spell : MonoBehaviour
     {
         if(isInCD)
         {
-            currentCooldown += Time.deltaTime;
+            currentCooldown -= Time.deltaTime;
+            UIManager.Singleton.UpdateActivSpellCD(currentCooldown);
 
-            if(currentCooldown >= m_Cooldown)
+            if(currentCooldown <= 0)
             {
                 isInCD = false;
             }
@@ -44,8 +45,7 @@ public abstract class Spell : MonoBehaviour
     public virtual void Cast()
     {
         isInCD = true;
-        currentCooldown = 0;
-        Debug.Log("d");
+        currentCooldown = m_Cooldown;
         //Do spell action here
     }
 
