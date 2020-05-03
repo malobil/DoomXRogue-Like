@@ -15,8 +15,8 @@ TagManager:
   - 
   - Ground
   - GroundDetector
-  - 
-  - 
+  - Player
+  - PlayerBullet
   - 
   - 
   - 

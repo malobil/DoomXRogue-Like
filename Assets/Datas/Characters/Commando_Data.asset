@@ -16,11 +16,12 @@ MonoBehaviour:
   HP: 200
   HPRegain: 1
   Shield: 0
-  Damage: 0
+  Damage: 50
   SpellDamage: 0
+  Range: 25
   CDR: 0
   AtkSpeed: 0
-  ReloadSpeed: 0
-  MoveSpeed: 5
+  ReloadSpeed: 1
+  MoveSpeed: 3
   JumpNumber: 1
   JumpForce: 5

@@ -5,16 +5,30 @@ using UnityEngine;
 public abstract class Characters : MonoBehaviour,IDamageable,IHealable
 {
     [Header("Data")]
-    [SerializeField] private CharacterData CharacterStats;
+    [SerializeField] protected CharacterData CharacterStats;
+    protected CurrentCharacterStats currentStats = new CurrentCharacterStats() ;
+    protected float shotCD = 0 ;
+    protected bool canShot = true;
+    private bool canMove = true;
 
     [Header("Camera")]
-    [SerializeField] private Transform CharacterCamera ;
+    [SerializeField] protected Transform CharacterCamera ;
     [SerializeField] private float CameraSensitivity = 0.5f ;
     private float xCameraRotation;
 
     [Header("Jump")]
-    [SerializeField] private GroundDetector CharacterFeet;
     private int CurrentJumpNum;
+
+    [Header("Shot")]
+    [SerializeField] protected GameObject BulletPrefab ;
+
+    [Header("Spells")]
+    [SerializeField] private Spell pasivSpell;
+    [SerializeField] private Spell activSpell;
+    [SerializeField] private Spell ultimateSpell;
+
+    [Header("Weapon")]
+    [SerializeField] private Weapon currentWeapon;
 
     //Controls
     private CharacterControls ActionControls;
@@ -22,6 +36,62 @@ public abstract class Characters : MonoBehaviour,IDamageable,IHealable
 
     //Components
     private Rigidbody RbComponent;
+
+
+    public virtual void OnEnter()
+    {
+        SetupStats();
+        SetupWeapon();
+        SetupSpell();
+        SetupUltimate();
+        ActionControls = new CharacterControls();
+        ActionControls.CharacterMoves.Jump.performed += ctx => Jump();
+        ActionControls.CharacterMoves.Shot.performed += ctx => Shot();
+        ActionControls.CharacterMoves.Spell.performed += ctx => CastSpell();
+        ActionControls.CharacterMoves.Ultimate.performed += ctx => CastUltimate();
+        ActionControls.Enable();
+        RbComponent = GetComponent<Rigidbody>();
+    }
+
+    public virtual void OnUpdate()
+    {
+        Move();
+        CameraControl();
+        ReloadShot();
+    }
+
+    public virtual void SetupStats()
+    {
+        currentStats.CurrentAtkSpeed = CharacterStats.AtkSpeed;
+        currentStats.CurrentCDR = CharacterStats.CDR;
+        currentStats.CurrentDamage = CharacterStats.Damage;
+        currentStats.CurrentHP = CharacterStats.HP;
+        currentStats.CurrentHPRegain = CharacterStats.HPRegain;
+        currentStats.CurrentJumpForce = CharacterStats.JumpForce;
+        currentStats.CurrentJumpNumber = CharacterStats.JumpNumber;
+        currentStats.CurrentMoveSpeed = CharacterStats.MoveSpeed;
+        currentStats.CurrentRange = CharacterStats.Range;
+        currentStats.CurrentReloadSpeed = CharacterStats.ReloadSpeed;
+        currentStats.CurrentShield = CharacterStats.Shield;
+        currentStats.CurrentSpellDamage = CharacterStats.SpellDamage;
+    }
+
+    public virtual void SetupWeapon()
+    {
+        currentWeapon.Setup(this);
+    }
+
+    public virtual void SetupSpell()
+    {
+        if(activSpell != null)
+        activSpell.Setup(this);
+    }
+
+    public virtual void SetupUltimate()
+    {
+        if(ultimateSpell != null)
+        ultimateSpell.Setup(this);
+    }
 
     public virtual void Heal(float healTake)
     {
@@ -35,27 +105,56 @@ public abstract class Characters : MonoBehaviour,IDamageable,IHealable
 
     public virtual void Shot()
     {
+        Debug.Log(canShot);
+        if (!canShot)
+        {
+            return;
+        }
 
+        currentWeapon.Shot();
+
+        canShot = false;
+        shotCD = 0;
+       
     }
 
-    public virtual void OnEnter()
+    public virtual void CastSpell()
     {
-        ActionControls = new CharacterControls();
-        ActionControls.CharacterMoves.Jump.performed += ctx => Jump();
-        ActionControls.Enable();
-        RbComponent = GetComponent<Rigidbody>();
+        if(activSpell != null)
+        activSpell.Preview();
     }
 
-    public virtual void OnUpdate()
+    public virtual void CastUltimate()
     {
-        Move();
-        CameraControl();
+        if(ultimateSpell != null)
+        ultimateSpell.Preview();
     }
+
+    public virtual void ReloadShot()
+    {
+        if(!canShot)
+        {
+            if (shotCD < currentStats.CurrentReloadSpeed)
+            {
+                shotCD += Time.deltaTime;
+            }
+            else
+            {
+                canShot = true;
+            }
+        }
+    }
+
 
     public virtual void Move()
     {
+        if(!canMove)
+        {
+            return;
+        }
+
         MovementInputs = ActionControls.CharacterMoves.Movements.ReadValue<Vector2>();
-        Vector3 Movement = (transform.forward.normalized * MovementInputs.y * CharacterStats.MoveSpeed) + (transform.right * MovementInputs.x * CharacterStats.MoveSpeed);
+        Vector3 Movement = (transform.forward.normalized * MovementInputs.y * currentStats.CurrentMoveSpeed) + (transform.right * MovementInputs.x * currentStats.CurrentMoveSpeed);
         Movement.y = RbComponent.velocity.y;
         RbComponent.velocity = Movement;
     }
@@ -76,14 +175,39 @@ public abstract class Characters : MonoBehaviour,IDamageable,IHealable
     {
         if(CurrentJumpNum > 0)
         {
-            RbComponent.AddForce(Vector3.up * CharacterStats.JumpForce, ForceMode.Impulse);
+            RbComponent.AddForce(Vector3.up * currentStats.CurrentJumpForce, ForceMode.Impulse);
             CurrentJumpNum--;
         }
     }
 
     public virtual void ResetJump()
     {
-        CurrentJumpNum = CharacterStats.JumpNumber;
+        CurrentJumpNum = currentStats.CurrentJumpNumber;
+    }
+
+    public CurrentCharacterStats GetCurrentStats()
+    {
+        return currentStats;
+    }
+
+    public Transform GetCamera()
+    {
+        return CharacterCamera;
+    }
+
+    public Vector3 GetMovementInputs()
+    {
+        return MovementInputs;
+    }
+
+    public void DisableMovement()
+    {
+        canMove = false;
+    }
+
+    public void AllowMovement()
+    {
+        canMove = true;
     }
 
     // Start is called before the first frame update
@@ -97,4 +221,20 @@ public abstract class Characters : MonoBehaviour,IDamageable,IHealable
     {
         OnUpdate();
     }
+}
+
+public class CurrentCharacterStats
+{
+    public float CurrentHP;
+    public float CurrentHPRegain;
+    public float CurrentShield;
+    public float CurrentDamage;
+    public float CurrentSpellDamage;
+    public float CurrentRange;
+    public float CurrentCDR;
+    public float CurrentAtkSpeed;
+    public float CurrentReloadSpeed;
+    public float CurrentMoveSpeed;
+    public int CurrentJumpNumber;
+    public float CurrentJumpForce;
 }

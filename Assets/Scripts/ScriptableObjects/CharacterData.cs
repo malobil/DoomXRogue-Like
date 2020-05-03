@@ -11,6 +11,7 @@ public class CharacterData : ScriptableObject
     public float Shield;
     public float Damage;
     public float SpellDamage;
+    public float Range;
     public float CDR;
     public float AtkSpeed;
     public float ReloadSpeed;

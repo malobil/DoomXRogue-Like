@@ -41,6 +41,30 @@ public class @CharacterControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Shot"",
+                    ""type"": ""Button"",
+                    ""id"": ""3885ecda-5b9d-48bd-a054-866b92db2599"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Spell"",
+                    ""type"": ""Button"",
+                    ""id"": ""01956d9b-70df-4ee0-9347-3220c3ba765b"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Ultimate"",
+                    ""type"": ""Button"",
+                    ""id"": ""0e8dad2d-39fc-44ea-9a2a-7b8faacec0f1"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -120,6 +144,39 @@ public class @CharacterControls : IInputActionCollection, IDisposable
                     ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d4198114-62de-473b-8a76-46bda482d9fc"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""62e19597-9942-4dd1-8a75-40e2fa985ae3"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Spell"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e351558f-3258-4467-a5f9-58985515a938"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Ultimate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -131,6 +188,9 @@ public class @CharacterControls : IInputActionCollection, IDisposable
         m_CharacterMoves_Movements = m_CharacterMoves.FindAction("Movements", throwIfNotFound: true);
         m_CharacterMoves_MousePosition = m_CharacterMoves.FindAction("MousePosition", throwIfNotFound: true);
         m_CharacterMoves_Jump = m_CharacterMoves.FindAction("Jump", throwIfNotFound: true);
+        m_CharacterMoves_Shot = m_CharacterMoves.FindAction("Shot", throwIfNotFound: true);
+        m_CharacterMoves_Spell = m_CharacterMoves.FindAction("Spell", throwIfNotFound: true);
+        m_CharacterMoves_Ultimate = m_CharacterMoves.FindAction("Ultimate", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -183,6 +243,9 @@ public class @CharacterControls : IInputActionCollection, IDisposable
     private readonly InputAction m_CharacterMoves_Movements;
     private readonly InputAction m_CharacterMoves_MousePosition;
     private readonly InputAction m_CharacterMoves_Jump;
+    private readonly InputAction m_CharacterMoves_Shot;
+    private readonly InputAction m_CharacterMoves_Spell;
+    private readonly InputAction m_CharacterMoves_Ultimate;
     public struct CharacterMovesActions
     {
         private @CharacterControls m_Wrapper;
@@ -190,6 +253,9 @@ public class @CharacterControls : IInputActionCollection, IDisposable
         public InputAction @Movements => m_Wrapper.m_CharacterMoves_Movements;
         public InputAction @MousePosition => m_Wrapper.m_CharacterMoves_MousePosition;
         public InputAction @Jump => m_Wrapper.m_CharacterMoves_Jump;
+        public InputAction @Shot => m_Wrapper.m_CharacterMoves_Shot;
+        public InputAction @Spell => m_Wrapper.m_CharacterMoves_Spell;
+        public InputAction @Ultimate => m_Wrapper.m_CharacterMoves_Ultimate;
         public InputActionMap Get() { return m_Wrapper.m_CharacterMoves; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -208,6 +274,15 @@ public class @CharacterControls : IInputActionCollection, IDisposable
                 @Jump.started -= m_Wrapper.m_CharacterMovesActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_CharacterMovesActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_CharacterMovesActionsCallbackInterface.OnJump;
+                @Shot.started -= m_Wrapper.m_CharacterMovesActionsCallbackInterface.OnShot;
+                @Shot.performed -= m_Wrapper.m_CharacterMovesActionsCallbackInterface.OnShot;
+                @Shot.canceled -= m_Wrapper.m_CharacterMovesActionsCallbackInterface.OnShot;
+                @Spell.started -= m_Wrapper.m_CharacterMovesActionsCallbackInterface.OnSpell;
+                @Spell.performed -= m_Wrapper.m_CharacterMovesActionsCallbackInterface.OnSpell;
+                @Spell.canceled -= m_Wrapper.m_CharacterMovesActionsCallbackInterface.OnSpell;
+                @Ultimate.started -= m_Wrapper.m_CharacterMovesActionsCallbackInterface.OnUltimate;
+                @Ultimate.performed -= m_Wrapper.m_CharacterMovesActionsCallbackInterface.OnUltimate;
+                @Ultimate.canceled -= m_Wrapper.m_CharacterMovesActionsCallbackInterface.OnUltimate;
             }
             m_Wrapper.m_CharacterMovesActionsCallbackInterface = instance;
             if (instance != null)
@@ -221,6 +296,15 @@ public class @CharacterControls : IInputActionCollection, IDisposable
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @Shot.started += instance.OnShot;
+                @Shot.performed += instance.OnShot;
+                @Shot.canceled += instance.OnShot;
+                @Spell.started += instance.OnSpell;
+                @Spell.performed += instance.OnSpell;
+                @Spell.canceled += instance.OnSpell;
+                @Ultimate.started += instance.OnUltimate;
+                @Ultimate.performed += instance.OnUltimate;
+                @Ultimate.canceled += instance.OnUltimate;
             }
         }
     }
@@ -230,5 +314,8 @@ public class @CharacterControls : IInputActionCollection, IDisposable
         void OnMovements(InputAction.CallbackContext context);
         void OnMousePosition(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnShot(InputAction.CallbackContext context);
+        void OnSpell(InputAction.CallbackContext context);
+        void OnUltimate(InputAction.CallbackContext context);
     }
 }
